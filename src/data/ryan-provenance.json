@@ -1,0 +1,12 @@
+{
+  "bundle": "main.984e0cc7.js",
+  "dictionary": 31900,
+  "dailyEligible": 479,
+  "files": {
+    "reference/ryan-main.js": "53d1d1736ba08d9878d26687d7beef2a1ee8ab82bdbec3e100aea53d57a26d17",
+    "reference/ryan-main.js.map": "86b9b99120d9cff0e7799857f2f8942abf104ba75e84b9b90c04b38a4d365a10",
+    "src/data/ryan-colornames.json": "4766268b9a8aa9ed62d8d2fc10a6af4ffad299a9e802300e5743103322e45495",
+    "src/data/ryan-target-pools.json": "9823c799096f7d3cf6fc59880f070b3041ee9671c72e47b4144bc6a75e851357",
+    "tests/ryan-score-fixtures.json": "812bd3f332b6cc2e0d103f270c11e2764ce42b27b03f226429f0dafd85e0a221"
+  }
+}
