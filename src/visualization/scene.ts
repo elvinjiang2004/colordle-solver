@@ -5,7 +5,7 @@ import { sampleGamut } from './gamut';
 import { hexToLab } from '../color/colorConversion';
 import { SHELL_COLORS, type ColorEntry, type Observation, type Quality } from '../types';
 
-type Layer = 'gamut' | 'dictionary' | 'candidates' | 'guesses' | 'shells' | 'eliminated';
+type Layer = 'gamut' | 'candidates' | 'guesses' | 'shells' | 'eliminated';
 const position = (lab: Lab) => new THREE.Vector3(lab.a, lab.l, lab.b);
 
 export class LabScene {
@@ -13,7 +13,7 @@ export class LabScene {
   private scene = new THREE.Scene();
   private camera = new THREE.PerspectiveCamera(42, 1, 0.1, 1500);
   private controls: OrbitControls;
-  private groups = Object.fromEntries(['gamut', 'dictionary', 'candidates', 'guesses', 'shells', 'eliminated'].map(key => [key, new THREE.Group()])) as Record<Layer, THREE.Group>;
+  private groups = Object.fromEntries(['gamut', 'dictionary', 'candidates', 'guesses', 'shells', 'eliminated'].map(key => [key, new THREE.Group()])) as Record<Layer | 'dictionary', THREE.Group>;
   private dictionary: ColorEntry[] = [];
   private eligible = new Set<number>();
   private observations: Observation[] = [];
@@ -241,7 +241,11 @@ export class LabScene {
     this.selectionMarker.visible = true; this.dirty = true;
   }
 
-  setLayer(name: Layer, visible: boolean) { this.groups[name].visible = visible; this.dirty = true; }
+  setLayer(name: Layer, visible: boolean) {
+    this.groups[name].visible = visible;
+    if (name === 'candidates') this.groups.dictionary.visible = visible;
+    this.dirty = true;
+  }
   setOpacity(opacity: number) { this.opacity = opacity; this.highlight(this.selected); }
   setPointSize(size: number) {
     this.pointSize = size; this.dirty = true;

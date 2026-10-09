@@ -31,7 +31,6 @@ export function renderLayout(root: HTMLElement) {
           <div class="scene-settings">
             <div class="layer-toggles" aria-label="Scene layers">
               <label><input type="checkbox" data-layer="gamut" checked />Gamut</label>
-              <label><input type="checkbox" data-layer="dictionary" checked />Dictionary points</label>
               <label><input type="checkbox" data-layer="candidates" checked />Remaining candidates</label>
               <label><input type="checkbox" data-layer="guesses" checked />Guess points</label>
               <label><input type="checkbox" data-layer="shells" checked />Distance shells</label>
