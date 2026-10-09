@@ -85,7 +85,7 @@ function requestGeometry() {
 
 function recompute() {
   pool = element<HTMLSelectElement>('target-scope').value === 'all' ? dictionary : targetPool(dictionary);
-  scene?.setDictionary(dictionary, pool);
+  scene?.setTargetPool(pool);
   updateProfileLabels();
   ({ candidates } = filterCandidates(pool, observations));
   renderHistory(observations, selectedId);

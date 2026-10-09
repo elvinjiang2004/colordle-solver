@@ -55,6 +55,8 @@ The page contains the solver controls, color-space visualization, and a full-wid
 
 The scene supports rotation, zoom, reset view, layer togggles, shell opacity, point size, and three quality levels. When the canvas has keyboard focus, arrows rotate, +/− zoom, and Home resets. The candidate table also supports inspecting colors without using the scene.
 
+The **Remaining candidates** layer contains only the selected target pool after applying every observation. Before any guesses, daily mode displays 479 named targets and all-names mode displays 31,896 for Ryan's dictionary. The **Eliminated targets** layer also stays within the selected pool. **Gamut** is a separate sample of displayable RGB colors.
+
 ## Compatibility and exact filtering
 
 Both games use **CIEDE2000**, but their RGB-to-Lab implementations differ. This changes some scores by hundredths. The solver now reproduces these reported cases with Ryan selected:

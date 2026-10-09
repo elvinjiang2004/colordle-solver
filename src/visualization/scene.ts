@@ -13,9 +13,8 @@ export class LabScene {
   private scene = new THREE.Scene();
   private camera = new THREE.PerspectiveCamera(42, 1, 0.1, 1500);
   private controls: OrbitControls;
-  private groups = Object.fromEntries(['gamut', 'dictionary', 'candidates', 'guesses', 'shells', 'eliminated'].map(key => [key, new THREE.Group()])) as Record<Layer | 'dictionary', THREE.Group>;
-  private dictionary: ColorEntry[] = [];
-  private eligible = new Set<number>();
+  private groups = Object.fromEntries(['gamut', 'candidates', 'guesses', 'shells', 'eliminated'].map(key => [key, new THREE.Group()])) as Record<Layer, THREE.Group>;
+  private targetPool: ColorEntry[] = [];
   private observations: Observation[] = [];
   private pickables: THREE.Object3D[] = [];
   private raycaster = new THREE.Raycaster();
@@ -171,7 +170,7 @@ export class LabScene {
     this.groups.gamut.add(this.cloud(data.positions, colors, quality === 'high' ? 1.8 : 2.3, this.observations.length ? 0.13 : 0.42));
   }
 
-  setDictionary(entries: ColorEntry[], pool: ColorEntry[]) { this.dictionary = entries; this.eligible = new Set(pool.map(c => c.id)); }
+  setTargetPool(pool: ColorEntry[]) { this.targetPool = pool; }
 
   setState(candidates: ColorEntry[], observations: Observation[]) {
     this.observations = observations;
@@ -179,12 +178,6 @@ export class LabScene {
     this.pickables = [];
     this.selectionMarker.visible = false;
     const remaining = new Set(candidates.map(c => c.id));
-    this.clear(this.groups.dictionary);
-    // Non-target names remain context; eliminated targets have their own toggle.
-    const backdrop = observations.length ? this.dictionary.filter(c => !this.eligible.has(c.id)) : this.dictionary;
-    const dictionaryPoints = this.colorCloud(backdrop, 2.5, observations.length ? 0.12 : 0.2);
-    this.groups.dictionary.add(dictionaryPoints);
-    this.pickables.push(dictionaryPoints);
     this.clear(this.groups.candidates);
     const points = this.colorCloud(candidates, observations.length ? this.pointSize + 2 : 3.2, 1);
     this.groups.candidates.add(points);
@@ -194,7 +187,7 @@ export class LabScene {
     }
     this.pickables.unshift(points);
     this.clear(this.groups.eliminated);
-    this.groups.eliminated.add(this.colorCloud(this.dictionary.filter(c => this.eligible.has(c.id) && !remaining.has(c.id)), 2.5, 0.17));
+    this.groups.eliminated.add(this.colorCloud(this.targetPool.filter(c => !remaining.has(c.id)), 2.5, 0.17));
     this.clear(this.groups.guesses);
     observations.forEach((observation, index) => {
       const color = SHELL_COLORS[index % SHELL_COLORS.length];
@@ -243,7 +236,6 @@ export class LabScene {
 
   setLayer(name: Layer, visible: boolean) {
     this.groups[name].visible = visible;
-    if (name === 'candidates') this.groups.dictionary.visible = visible;
     this.dirty = true;
   }
   setOpacity(opacity: number) { this.opacity = opacity; this.highlight(this.selected); }
